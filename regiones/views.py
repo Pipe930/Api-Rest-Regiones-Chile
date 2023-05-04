@@ -24,3 +24,25 @@ class ListaRegionesView(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
         
         return Response({"message": "No hay Regiones Registradas"}, status=status.HTTP_204_NO_CONTENT)
+
+class DetalleRegionView(generics.RetrieveAPIView):
+
+    serializer_class = RegionSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self, id:int):
+
+        try:
+            region = Region.objects.get(id_region = id)
+        except Region.DoesNotExist:
+            raise Http404
+
+        return region
+    
+    def get(self, request, id:int, format=None):
+
+        region = self.get_object(id=id)
+
+        serializer = self.get_serializer(region)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
