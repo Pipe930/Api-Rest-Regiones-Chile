@@ -17,6 +17,7 @@ class Region(models.Model):
         db_table = "regiones"
         verbose_name = 'region'
         verbose_name_plural = 'regiones'
+        ordering = ('nombre',)
 
 class Provincia(models.Model):
     id_provincia = models.BigAutoField(primary_key=True, unique=True)
@@ -31,6 +32,7 @@ class Provincia(models.Model):
         db_table = "provincias"
         verbose_name = 'provincia'
         verbose_name_plural = 'provincias'
+        ordering = ('nombre',)
     
 class Comuna(models.Model):
     id_comuna = models.BigAutoField(primary_key=True, unique=True)
@@ -45,3 +47,4 @@ class Comuna(models.Model):
         db_table = "comunas"
         verbose_name = "comuna"
         verbose_name_plural = "comunas"
+        ordering = ('nombre',)
