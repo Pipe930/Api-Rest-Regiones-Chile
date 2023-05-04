@@ -1,4 +1,5 @@
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 class Region(models.Model):
     id_region = models.BigAutoField(primary_key=True, unique=True)
@@ -8,6 +9,7 @@ class Region(models.Model):
     superficie = models.DecimalField(max_digits=7, decimal_places=1)
     capital = models.CharField(max_length=40, unique=True)
     numero_region = models.CharField(max_length=8, unique=True)
+    historial = HistoricalRecords()
 
     def __str__(self) -> str:
         return self.nombre
@@ -22,6 +24,7 @@ class Region(models.Model):
 class Provincia(models.Model):
     id_provincia = models.BigAutoField(primary_key=True, unique=True)
     nombre = models.CharField(max_length=100, unique=True)
+    historial = HistoricalRecords()
     id_region = models.ForeignKey(Region, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
@@ -37,6 +40,7 @@ class Provincia(models.Model):
 class Comuna(models.Model):
     id_comuna = models.BigAutoField(primary_key=True, unique=True)
     nombre = models.CharField(max_length=100, unique=True)
+    historial = HistoricalRecords()
     id_provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
