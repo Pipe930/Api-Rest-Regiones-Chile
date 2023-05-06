@@ -15,7 +15,7 @@ class ListaRegionesView(generics.ListCreateAPIView):
     parser_classes = [JSONParser]
     pagination_class = PageNumberPagination
 
-    def get(self, request, format=None):
+    def list(self, request, format=None):
 
         regiones = self.get_queryset()
         pagina = self.paginate_queryset(regiones)
@@ -26,7 +26,7 @@ class ListaRegionesView(generics.ListCreateAPIView):
         
         return Response({"message": "No hay Regiones Registradas"}, status=status.HTTP_204_NO_CONTENT)
     
-    def post(self, request, format=None):
+    def create(self, request, format=None):
 
         serializer = self.get_serializer(data=request.data)
 
@@ -58,7 +58,7 @@ class DetalleRegionView(generics.RetrieveUpdateDestroyAPIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def put(self, request, id:int, fromat=None):
+    def update(self, request, id:int, fromat=None):
 
         region = self.get_object(id)
         serializer = RegionSerializer(region, data=request.data)
@@ -69,11 +69,25 @@ class DetalleRegionView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"data":serializer.data, "message": "region actualizada con exito"}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, id:int, format=None):
+
+        region = self.get_object(id)
+        region.delete()
+
+        return Response({"message": "La region a sido eliminada con exito"}, status=status.HTTP_204_NO_CONTENT)
 
 class RegionSearchView(generics.ListAPIView):
 
-    queryset = Region.objects.all().order_by('nombre')
-    serializer_class = RegionSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['nombre']
     permission_classes = [AllowAny]
+    serializer_class = RegionSerializer
+
+    def list(self, request, format=None):
+
+        nombre = request.GET.get("search")
+        filter = Region.objects.filter(nombre=nombre)
+        serializer = self.get_serializer(filter, many=True)
+
+        if not len(serializer.data):
+            return Response({"data": "no se encontraron regiones con ese nombre"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
