@@ -8,4 +8,15 @@ urlRegion = [
     path("region", views.RegionSearchView.as_view(), name="searchregion")
 ]
 
-urlRegion = format_suffix_patterns(urlpatterns=urlRegion)
+urlProvincia = [
+    path("", views.ListaProvinciaView.as_view(), name="listaprovincias"),
+    path("provincia/<int:id>", views.DetalleProvinciaView.as_view(), name="detalleprovincia")
+]
+
+urlComuna = [
+    path("", views.ListaComunasView.as_view(), name="listacomunas")
+]
+
+urlComuna = format_suffix_patterns(urlComuna)
+urlProvincia = format_suffix_patterns(urlProvincia)
+urlRegion = format_suffix_patterns(urlRegion)
